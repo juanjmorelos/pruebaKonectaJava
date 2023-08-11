@@ -6,6 +6,7 @@ Consideraciones a tener en cuenta:
 - Por falta de tiempo el frontend de la prueba se realizó en HTML y Javascript básico
 - Como motor de base de datos se utilizó MySQL
 - Se recomienda usar [visual studio code](https://code.visualstudio.com/) para lanzar y ejecutar el servidor java
+- Las sentencias solicitadas a la base de datos se encuentran al final del archivo y se pueden ejecutar también desde el frontend en el aplicativo web
 ## Pasos para ejecutar la prueba
 1. Descargar xampp o cualquier otra aplicación que proporcione un servidor local
 2. La carpeta `frontendKonecta` (que contiene el aplicativo web) debe alojarla dentro de la carpeta interna del servidor local, si se descarga xampp la ruta es la siguiente:
@@ -49,3 +50,15 @@ Consideraciones a tener en cuenta:
 Si todo sale bien debería ver lo siguiente:
 
 ![imagen pantalla principal](imagenes/captura_pagina_principal.png)
+
+## Sentencias de las dos consultas solicitadas
+Sentencias solicitadas de SQL 
+```sql
+-- Obtener el producto con más stock
+SELECT * FROM producto p WHERE p.stockProd = (SELECT MAX(p2.stockProd) FROM producto p2);
+
+-- Obtener el producto con más ventas
+SELECT * FROM producto p JOIN (SELECT sp.producto, SUM(sp.cantidad) AS total_vendido FROM venta sp 
+GROUP BY sp.producto ORDER BY total_vendido DESC) AS subquery 
+WHERE p.idProducto = subquery.producto ORDER BY subquery.total_vendido desc LIMIT 1;
+```
